@@ -11,15 +11,29 @@ def hex_to_ip(hexlist: list[str]) -> str:
 
     return ip[0:-1]# Return the ip string without the last character, as it is a uselsss '.'
 
-def parse() :
-    #Seperate files by lines, split by commas if needed
-
+def parse(raw_text: str) -> list[list[str]]:
+    blocks = []
+    current = []
+    #Seperate lines in files by spaces
+    for line in raw_text.split(' '):
+        if line.strip().isdigit() or (line and line[0].isdigit() and "ICMP" in line):
+            if current:
+                blocks.append(current)
+                current = []
+            continue
     #Parse the filtered raw text files and read packet fields
-
-    #Choose to parse the summary line text or the hex
-
+        if len(line) > 4 and line[:4].isdigit():
+            # Extract only 2-char hex
+            parts = line[4:].strip().split()
+            for p in parts:
+                #ignore the parts in the file that are ...C....2.U@..E. etc
+                if len(p) == 2:
+                    current.append(p.lower())
     #Only output the data needed for the metrics
-    print()
+    if current:
+        blocks.append(current)
+    return blocks
+
 
 def main():
     print(hex_to_ip(['c0', 'a8', '64', '01']))
