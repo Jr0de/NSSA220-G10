@@ -1,7 +1,5 @@
 #Phase 2
 
-#Input file
-
 # Given a list of 4 2-character hex strings, return an ipv4 address string
 def hex_to_ip(hexlist: list[str]) -> str:
     ip = ""
@@ -15,7 +13,9 @@ def parse(raw_text: str) -> list[list[str]]:
     blocks = []
     current = []
     #Seperate lines in files by spaces
-    for line in raw_text.split(' '):
+    fileread = open(raw_text, "r")
+    for line in fileread:
+        line.split(' ')
         if line.strip().isdigit() or (line and line[0].isdigit() and "ICMP" in line):
             if current:
                 blocks.append(current)
@@ -37,6 +37,10 @@ def parse(raw_text: str) -> list[list[str]]:
 
 def main():
     print(hex_to_ip(['c0', 'a8', '64', '01']))
+    parsed = parse("Node1_filtered.txt")
+    print(parsed[1][0:70])
+    print(hex_to_ip(parsed[4][26:30]))
+
 
 if __name__ == '__main__':
     main()
