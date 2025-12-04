@@ -2,10 +2,15 @@
 
 import packet_parser
 
-NODE1_SRC = 
-NODE2_SRC = 
-NODE3_SRC = 
-NODE4_SRC = 
+parsed1 = packet_parser.parse("Node1_filtered.txt")
+parsed2 = packet_parser.parse("Node2_filtered.txt")
+parsed3 = packet_parser.parse("Node3_filtered.txt")
+parsed4 = packet_parser.parse("Node4_filtered.txt")
+
+NODE1_SRC = "192.168.100.1"
+NODE2_SRC = "192.168.100.2"
+NODE3_SRC = "192.168.200.1"
+NODE4_SRC = "192.168.200.2"
 
 def compute() :
     #Create loop to do the following Data size metrics:
