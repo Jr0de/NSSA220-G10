@@ -35,14 +35,16 @@ def compute(data: list[list[str]]) :
 
 def time(data: list[list[str]]) :
     #Create loop to do the following Time based metrics:
+    
+    for packet in data:
+        #1. Average Ping Round Trip Time (RTT): Measured in milliseconds
+        #1a. Get the echo request and corresponding reply times
+        
+        #2. Echo Request Throughput (in kB/sec): 
 
-    #1. Average Ping Round Trip Time (RTT): Measured in milliseconds
+        #3. Echo Request Goodput (in kB/sec):
 
-    #2. Echo Request Throughput (in kB/sec): 
-
-    #3. Echo Request Goodput (in kB/sec):
-
-    #4. Average Reply Delay (in microseconds): 
+        #4. Average Reply Delay (in microseconds): 
 
 
     #Create loop to do the following Distance metric:

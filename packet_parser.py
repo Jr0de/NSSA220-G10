@@ -9,15 +9,21 @@ def hex_to_ip(hexlist: list[str]) -> str:
 
     return ip[0:-1]# Return the ip string without the last character, as it is a uselsss '.'
 
+TIMEINDEX = 1
+
 def parse(raw_text: str) -> list[list[str]]:
     blocks = []
     current = []
     #Seperate lines in files by spaces
     fileread = open(raw_text, "r")
+    time = None
     for line in fileread:
         line.split(' ')
         if line.strip().isdigit() or (line and line[0].isdigit() and "ICMP" in line):
+            time = line.split()[TIMEINDEX]# I know this line probably doesnt make sense but this whole for loop is so fucked but at least it works so im not touching it
             if current:
+                # Append time at end    
+                current.append(time)
                 blocks.append(current)
                 current = []
             continue
@@ -29,22 +35,22 @@ def parse(raw_text: str) -> list[list[str]]:
                 #ignore the parts in the file that are ...C....2.U@..E. etc
                 if len(p) == 2:
                     current.append(p.lower())
+
     #Only output the data needed for the metrics
     if current:
         blocks.append(current)
+    
     return blocks
 
 
-def main():
+if __name__ == '__main__':
     hex_to_ip(['c0', 'a8', '64', '01'])
     parsed = parse("Node1_filtered.txt")
     print(parsed[1]) #--> 1 packet
     print("Source IP: " + hex_to_ip(parsed[1][26:30]))
     print("Destination IP: " + hex_to_ip(parsed[1][30:34]))
     print("Echo Request or reply/Host Unreachable if 3: " + hex_to_ip(parsed[1][34:35]))
-    print("Frame size (bytes): " + str(len(parsed[1])))
+    print("Frame size (bytes): " + str(len(parsed[1]) -1 )) #-1 due to time metric at end
     print("ICMP payload: "+ hex_to_ip(parsed[1][17:18]))
+    print("Time: " + parsed[1][-1])
 
-
-if __name__ == '__main__':
-    main()
