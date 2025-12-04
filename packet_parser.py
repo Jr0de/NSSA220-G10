@@ -38,11 +38,14 @@ def parse(raw_text: str) -> list[list[str]]:
 def main():
     print(hex_to_ip(['c0', 'a8', '64', '01']))
     parsed = parse("Node1_filtered.txt")
-    #print(parsed[1][0:70]) --> 1 packet
+    #print(parsed[1]) --> 1 packet
     print("Source IP: " + hex_to_ip(parsed[1][26:30]))
     print("Destination IP: " + hex_to_ip(parsed[1][30:34]))
     print("Echo Request or reply/Host Unreachable if 3: " + hex_to_ip(parsed[1][34:35]))
-    print("Frame size (bytes): " + hex_to_ip(parsed[1][17:18]))
+    print("Frame size (bytes): " + str(len(parsed[1])))
+    print("ICMP payload: "+ hex_to_ip(parsed[1][17:18]))
+    print("If x it is recieved/If y it is sent: " + hex_to_ip(parsed[1][2]))
+
     
 
 
