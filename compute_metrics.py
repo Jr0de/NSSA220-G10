@@ -7,12 +7,13 @@ parsed2 = packet_parser.parse("Node2_filtered.txt")
 parsed3 = packet_parser.parse("Node3_filtered.txt")
 parsed4 = packet_parser.parse("Node4_filtered.txt")
 
+
 NODE1_SRC = "192.168.100.1"
 NODE2_SRC = "192.168.100.2"
 NODE3_SRC = "192.168.200.1"
 NODE4_SRC = "192.168.200.2"
 
-def compute() :
+def compute(data: list[list[str]]) :
     #Create loop to do the following Data size metrics:
     
     #1. Number of Echo Requests sent
@@ -30,8 +31,9 @@ def compute() :
     #7. Total Echo Request data sent: In bytes, based on amount of data in the ICMP payload
 
     #8. Total Echo Request data received: In bytes, based on amount of data in the ICMP payload
+    print()
 
-
+def time(data: list[list[str]]) :
     #Create loop to do the following Time based metrics:
 
     #1. Average Ping Round Trip Time (RTT): Measured in milliseconds
