@@ -1,5 +1,12 @@
 #Phase 3
 
+import packet_parser
+
+NODE1_SRC = 
+NODE2_SRC = 
+NODE3_SRC = 
+NODE4_SRC = 
+
 def compute() :
     #Create loop to do the following Data size metrics:
     
@@ -33,8 +40,13 @@ def compute() :
 
     #Create loop to do the following Distance metric:
 
-    #Average number of hops per Echo Request, cannot hard code
+    #Output
     print()
 
 
-#Output
+def main():
+    compute()
+
+    
+if __name__ == '__main__':
+    main()
