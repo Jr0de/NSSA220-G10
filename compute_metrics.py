@@ -13,17 +13,30 @@ NODE2 = "192.168.100.2"
 NODE3 = "192.168.200.1"
 NODE4 = "192.168.200.2"
 
-def get_data_size_metrics(data: list[list[str]]) :
+def get_data_size_metrics(data: list[list[str]], sourceIP: str) :
     #Create loop to do the following Data size metrics:
-    
+    num_echoreq_sent = 0
+    num_echoreq_recieved = 0
+    num_echoreply_sent = 0
+    num_echoreply_recieved = 0
+    echoreq_bytes_sent = 0
+    echoreq_data_sent = 0
+    echoreq_bytes_recieved = 0
+    echoreq_data_recieved = 0
+    metrics = []
+    for i in range(len(data)):
     #1. Number of Echo Requests sent
-
+        if packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
+            num_echoreq_sent += 1
     #2. Number of Echo Requests received
-
+        elif packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) != sourceIP:
+            num_echoreq_recieved += 1
     #3. Number of Echo Replies sent
-
+        elif packet_parser.hex_to_ip(data[i][34:35]) == '0' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
+            num_echoreply_sent += 1
     #4. Number of Echo Replies received
-
+        elif packet_parser.hex_to_ip(data[i][34:35]) == '0' and packet_parser.hex_to_ip(data[i][26:30]) != sourceIP:
+            num_echoreply_recieved += 1
     #5. Total Echo Request bytes sent: In bytes, based on the size of the “frame”
 
     #6. Total Echo Request bytes received: In bytes, based on the size of the “frame”
@@ -31,7 +44,12 @@ def get_data_size_metrics(data: list[list[str]]) :
     #7. Total Echo Request data sent: In bytes, based on amount of data in the ICMP payload
 
     #8. Total Echo Request data received: In bytes, based on amount of data in the ICMP payload
-    print()
+    
+    metrics.append(num_echoreq_sent)
+    metrics.append(num_echoreq_recieved)
+    metrics.append(num_echoreply_sent)
+    metrics.append(num_echoreply_recieved)
+    return metrics
 
 ICMP_TYPE = 34
 TIME = -1
@@ -75,4 +93,6 @@ def get_time_metrics(data: list[list[str]]) :
     print()
 
 if __name__ == '__main__':
-    get_time_metrics(parsed1)
+    #get_time_metrics(parsed1)
+    nod1_met= get_data_size_metrics(parsed1, NODE1)
+    print(nod1_met[0])
