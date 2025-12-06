@@ -9,7 +9,8 @@ def hex_to_ip(hexlist: list[str]) -> str:
 
     return ip[0:-1]# Return the ip string without the last character, as it is a uselsss '.'
 
-TIMEINDEX = 1
+HEADER_TIMEINDEX, SOURCE_IP_START, SOURCE_IP_END, DESTINATION_IP_START, DESTINATION_IP_END,\
+        ICMP_TYPE, ICMP_PAYLOAD_START, ICMP_PAYLOAD_END, DATA_TIMEINDEX = 1, 26, 30, 30, 34, 34, 16, 18, -1 
 
 def parse(raw_text: str) -> list[list[str]]:
     blocks = []
@@ -20,10 +21,11 @@ def parse(raw_text: str) -> list[list[str]]:
     for line in fileread:
         line.split(' ')
         if line.strip().isdigit() or (line and line[0].isdigit() and "ICMP" in line):
-            time = line.split()[TIMEINDEX]# I know this line probably doesnt make sense but this whole for loop is so fucked but at least it works so im not touching it
             if current:
+                current.append(time)
                 blocks.append(current)
                 current = []
+            time = line.split()[HEADER_TIMEINDEX]# I know this line probably doesnt make sense but this whole for loop is so fucked but at least it works so im not touching it
             continue
     #Parse the filtered raw text files and read packet fields
         if len(line) > 4 and line[:4].isdigit():
@@ -33,23 +35,33 @@ def parse(raw_text: str) -> list[list[str]]:
                 #ignore the parts in the file that are ...C....2.U@..E. etc
                 if len(p) == 2:
                     current.append(p.lower())
-            # Append time to end of data
-            current.append(time)
+    
     #Only output the data needed for the metrics
     if current:
         blocks.append(current)# Ensures the last packet is captured (i think?)
          
     return blocks
-
+# Take packet data (list of hex strs) and store as needed metrics in the form of a dictionary
+def get_metrics(data: list[str]) -> dict:
+    metrics = {}
+    # Source ip
+    metrics['Source IP'] = hex_to_ip(data[SOURCE_IP_START:SOURCE_IP_END])
+    # Dest ip
+    metrics['Destination IP'] = hex_to_ip(data[DESTINATION_IP_START:DESTINATION_IP_END])
+    # icmp type
+    metrics['Type'] = int(data[ICMP_TYPE])
+    # icmp payload size
+    metrics['Payload Size'] = int(''.join(data[ICMP_PAYLOAD_START:ICMP_PAYLOAD_END]),16)
+    # frame size
+    metrics['Frame Size'] = int(len(data)) - 1# -1 to account for time metric
+    # time
+    metrics['Time'] = float(data[-1])
+    
+    return metrics
 
 if __name__ == '__main__':
     #hex_to_ip(['c0', 'a8', '64', '01'])
     parsed = parse("Node1_filtered.txt")
-    print(parsed[1])
-    #print("Source IP: " + hex_to_ip(parsed[1][26:30]))
-    #print("Destination IP: " + hex_to_ip(parsed[1][30:34]))
-    #print("Echo Request or reply/Host Unreachable if 3: " + hex_to_ip(parsed[1][34:35]))
-    #print("Frame size (bytes): " + str(len(parsed[1]) -1 )) #-1 due to time metric at end
-    #print("ICMP payload: "+ hex_to_ip(parsed[1][17:18]))
-    #print("Time: " + parsed[1][-1])
+    print(parsed[0])
+    print(get_metrics(parsed[0]))
 
