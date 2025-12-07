@@ -36,9 +36,10 @@ def parse(raw_text: str) -> list[list[str]]:
                 if len(p) == 2:
                     current.append(p.lower())
     
-    #Only output the data needed for the metrics
+    # Ensures the last packet is captured (i think?)
     if current:
-        blocks.append(current)# Ensures the last packet is captured (i think?)
+        current.append(time)# last packet doesnt have time metric without this line
+        blocks.append(current)
          
     return blocks
 # Take packet data (list of hex strs) and store as needed metrics in the form of a dictionary
@@ -62,6 +63,8 @@ def get_metrics(data: list[str]) -> dict:
 if __name__ == '__main__':
     #hex_to_ip(['c0', 'a8', '64', '01'])
     parsed = parse("Node1_filtered.txt")
-    print(parsed[0])
-    print(get_metrics(parsed[0]))
+    #for packet in parsed:
+        #print(packet)
+    print(parsed[-1])
+    print(get_metrics(parsed[-1]))
 
