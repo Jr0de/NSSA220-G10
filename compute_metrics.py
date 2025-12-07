@@ -20,10 +20,11 @@ def get_data_size_metrics(data: list[list[str]], sourceIP: str) :
     num_echoreply_sent = 0
     num_echoreply_recieved = 0
     echoreq_bytes_sent = 0
-    echoreq_data_sent = 0
     echoreq_bytes_recieved = 0
+    echoreq_data_sent = 0
     echoreq_data_recieved = 0
     metrics = []
+    
     for i in range(len(data)):
     #1. Number of Echo Requests sent
         if packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
@@ -37,18 +38,33 @@ def get_data_size_metrics(data: list[list[str]], sourceIP: str) :
     #4. Number of Echo Replies received
         elif packet_parser.hex_to_ip(data[i][34:35]) == '0' and packet_parser.hex_to_ip(data[i][26:30]) != sourceIP:
             num_echoreply_recieved += 1
+        
+        for j in range(len(data[i])):
+    
     #5. Total Echo Request bytes sent: In bytes, based on the size of the “frame”
-
+            if packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
+                echoreq_bytes_sent += len(data[i][j])-1
+    
     #6. Total Echo Request bytes received: In bytes, based on the size of the “frame”
-
-    #7. Total Echo Request data sent: In bytes, based on amount of data in the ICMP payload
-
-    #8. Total Echo Request data received: In bytes, based on amount of data in the ICMP payload
+            elif packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) != sourceIP:
+                echoreq_bytes_recieved += len(data[i][j])-1
+        
+        #7. Total Echo Request data sent: In bytes, based on amount of data in the ICMP payload
+        if packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
+            echoreq_data_sent += int(packet_parser.hex_to_ip(data[i][17:18]))
+        
+        #8. Total Echo Request data received: In bytes, based on amount of data in the ICMP payload
+        elif packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) != sourceIP:
+            echoreq_data_recieved += int(packet_parser.hex_to_ip(data[i][17:18]))
     
     metrics.append(num_echoreq_sent)
     metrics.append(num_echoreq_recieved)
     metrics.append(num_echoreply_sent)
     metrics.append(num_echoreply_recieved)
+    metrics.append(echoreq_bytes_sent)
+    metrics.append(echoreq_bytes_recieved)
+    metrics.append(echoreq_data_sent)
+    metrics.append(echoreq_data_recieved)
     return metrics
 
 ICMP_TYPE = 34
@@ -95,4 +111,11 @@ def get_time_metrics(data: list[list[str]]) :
 if __name__ == '__main__':
     #get_time_metrics(parsed1)
     nod1_met= get_data_size_metrics(parsed1, NODE1)
-    print(nod1_met[0])
+    print("Echo Requests Sent: "+ str(nod1_met[0]))
+    print("Echo Requests Received: "+str(nod1_met[1]))
+    print("Echo Replies Sent: "+str(nod1_met[2]))
+    print("Echo Replies Received: "+str(nod1_met[3]))
+    print("Echo Request Bytes Sent: "+str(nod1_met[4]))
+    print("Echo Request Bytes Received: "+str(nod1_met[5]))
+    print("Echo Request Data Sent: "+str(nod1_met[6]))
+    print("Echo Request Data Received: "+str(nod1_met[7]))
