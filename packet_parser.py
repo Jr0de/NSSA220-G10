@@ -65,6 +65,8 @@ if __name__ == '__main__':
     parsed = parse("Node1_filtered.txt")
     #for packet in parsed:
         #print(packet)
-    print(parsed[-1])
-    print(get_metrics(parsed[-1]))
+    print(parsed[30])
+    print(get_metrics(parsed[30]))
+    print(parsed[8])
+    print(get_metrics(parsed[8]))
 
