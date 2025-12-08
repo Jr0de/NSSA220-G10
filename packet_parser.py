@@ -28,12 +28,12 @@ def parse(raw_text: str) -> list[list[str]]:
             time = line.split()[HEADER_TIMEINDEX]# I know this line probably doesnt make sense but this whole for loop is so fucked but at least it works so im not touching it
             continue
     #Parse the filtered raw text files and read packet fields
-        if len(line) > 4 and line[:4].isdigit():
+        if len(line) > 4 and line[:1].isdigit():
             # Extract only 2-char hex
             parts = line[4:].strip().split()
             for p in parts:
                 #ignore the parts in the file that are ...C....2.U@..E. etc
-                if len(p) == 2:
+                if len(p) == 2 and p != 'jk':
                     current.append(p.lower())
     
     # Ensures the last packet is captured (i think?)
@@ -67,6 +67,6 @@ if __name__ == '__main__':
         #print(packet)
     print(parsed[30])
     print(get_metrics(parsed[30]))
-    print(parsed[8])
-    print(get_metrics(parsed[8]))
+    #print(parsed[8])
+    print(get_metrics(parsed[1]))
 
