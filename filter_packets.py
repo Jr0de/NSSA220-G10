@@ -27,7 +27,7 @@ def filter(filenames: list[str]):
                 line = capturefile.readline().strip()
                 linenum = 1
                 linenum_target = int(target_icmp_lines.readline().strip())
-                print(linenum_target)
+                #print(linenum_target)
                 
                 while linenum_target:# If a target line still exists, find it
                     if linenum == linenum_target:# When target line is found, write data and continue to next target line
@@ -63,8 +63,6 @@ def filter(filenames: list[str]):
         # Remove temporary file
         os.remove(f"/tmp/{tempfile}")
 
-def main():
-    filter(['provided_files/Captures/Node1.txt', 'provided_files/Captures/Node2.txt', 'provided_files/Captures/Node3.txt', 'provided_files/Captures/Node4.txt'])
 
 if __name__ == '__main__':
-    main()
+    filter(['provided_files/Captures/Node1.txt', 'provided_files/Captures/Node2.txt', 'provided_files/Captures/Node3.txt', 'provided_files/Captures/Node4.txt'])

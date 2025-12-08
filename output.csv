@@ -1,0 +1,56 @@
+Node 1
+
+Echo Requests Sent,Echo Requests Recieved,Echo Replies Sent,Echo Replies Received
+128,49,49,128
+Echo Request Bytes Sent (bytes),Echo Requent Data Sent (bytes)
+89580,84076
+Echo Request Bytes Recieved (bytes),Echo Requent Data Recieved (bytes)
+51956,49846
+
+Average RTT (milliseconds),2.564851562508963
+Echo Request Throughput (kB/sec),864.9927962418867
+Echo Request Goodput (kB/sec),849.1110292049852
+Average Reply Delay (microseconds),55.51020408163265
+
+Node 2
+
+Echo Requests Sent,Echo Requests Recieved,Echo Replies Sent,Echo Replies Received
+82,160,160,82
+Echo Request Bytes Sent (bytes),Echo Requent Data Sent (bytes)
+53129,49596
+Echo Request Bytes Recieved (bytes),Echo Requent Data Recieved (bytes)
+113976,107096
+
+Average RTT (milliseconds),2.677170731704159
+Echo Request Throughput (kB/sec),1524.9808680459664
+Echo Request Goodput (kB/sec),1493.0942749917397
+Average Reply Delay (microseconds),55.65
+
+Node 3
+
+Echo Requests Sent,Echo Requests Recieved,Echo Replies Sent,Echo Replies Received
+72,98,98,72
+Echo Request Bytes Sent (bytes),Echo Requent Data Sent (bytes)
+53142,50046
+Echo Request Bytes Recieved (bytes),Echo Requent Data Recieved (bytes)
+63006,58792
+
+Average RTT (milliseconds),2.779374999977651
+Echo Request Throughput (kB/sec),1166.4592859199809
+Echo Request Goodput (kB/sec),1141.2038078196854
+Average Reply Delay (microseconds),54.857142857142854
+
+Node 4
+
+Echo Requests Sent,Echo Requests Recieved,Echo Replies Sent,Echo Replies Received
+108,86,86,108
+Echo Request Bytes Sent (bytes),Echo Requent Data Sent (bytes)
+75343,70696
+Echo Request Bytes Recieved (bytes),Echo Requent Data Recieved (bytes)
+42481,38776
+
+Average RTT (milliseconds),3.038453703688312
+Echo Request Throughput (kB/sec),721.4012975691193
+Echo Request Goodput (kB/sec),703.891172718732
+Average Reply Delay (microseconds),53.31395348837209
+
