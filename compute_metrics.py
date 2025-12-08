@@ -69,7 +69,7 @@ def get_data_size_metrics(data: list[list[str]], sourceIP: str) :
 
 ECHO_REQUEST, ECHO_REPLY = 8, 0
 
-def get_time_metrics(data: list[list[str]], source_ip: str) :
+def get_time_metrics(data: list[list[str]], node_ip: str) :
     req_time = None
     rpl_time = None
     looking_for_matching_reply = False
@@ -77,23 +77,26 @@ def get_time_metrics(data: list[list[str]], source_ip: str) :
     round_trip_count = 0
     frame_size_sum = 0
     payload_size_sum = 0
-    
+    rpl_delay_req_time = None
+    rpl_delay_rpl_time = None
+    rpl_delay_sum = 0
+    rpl_delay_count = 0
 
-    #Create loop to do the following Time based metrics:
+    # Create loop to do the following Time based metrics:
     for packet in data:
         packet = packet_parser.get_metrics(packet)
         #1. Average Ping Round Trip Time (RTT): Measured in milliseconds
-        #Get the echo request and corresponding reply times of packets sourced from this node
-        if packet['Type'] == ECHO_REQUEST and packet['Source IP'] == source_ip:
+        # Get the echo request and corresponding reply times of packets sourced from this node
+        if packet['Type'] == ECHO_REQUEST and packet['Source IP'] == node_ip:
             req_time = packet['Time']
             looking_for_matching_reply = True
-            print(f"Request: {packet['Time']}")
+            #print(f"Request: {packet['Time']}")
         if packet['Type'] == ECHO_REPLY and looking_for_matching_reply:
             rpl_time = packet['Time']
-            print(f"Reply: {packet['Time']}")
-            #Once times gathered, calculate Round Trip Time and reset time vars
+            #print(f"Reply: {packet['Time']}")
+            # Once times gathered, calculate Round Trip Time and reset time vars
             rtt = (rpl_time - req_time) * 1000# convert to ms
-            print(f"Round Trip Time: {rtt:.2f} ms\n")#format for rounding
+            #print(f"Round Trip Time: {rtt:.2f} ms\n")#format for rounding
             round_trip_sum += rtt
             round_trip_count += 1
             req_time = None
@@ -107,15 +110,31 @@ def get_time_metrics(data: list[list[str]], source_ip: str) :
         payload_size_sum += packet['Payload Size']
 
         #4. Average Reply Delay (in microseconds): 
-        
+        if packet['Type'] == ECHO_REQUEST and packet['Destination IP'] == node_ip:   
+            rpl_delay_req_time = packet['Time']
+            #print(f"Request: {rpl_delay_req_time}")
+        if packet['Type'] == ECHO_REPLY and packet['Source IP'] == node_ip:
+            rpl_delay_rpl_time = packet['Time']
+            #print(f"Reply: {rpl_delay_rpl_time}")
+
+            rpl_delay = round(rpl_delay_rpl_time*1000000 - rpl_delay_req_time*1000000)# convert to microsecs
+            #print(f"Reply Delay: {rpl_delay} \u03bcs\n")
+            rpl_delay_sum += rpl_delay
+            rpl_delay_count += 1
+            rpl_delay_req_time, rpl_delay_rpl_time = None, None# reset vars
 
     #Output
+    print(f"Node {node_ip}:")
     print(f"Average RTT:\t{(round_trip_sum / round_trip_count):.4f} ms")    
     print(f"Throughput:\t{(frame_size_sum / round_trip_sum):.4f} kB/s")
     print(f"Goodput:\t{(payload_size_sum / round_trip_sum):.4f} kB/s")
+    print(f"Average Reply Delay:\t{(rpl_delay_sum / rpl_delay_count):.2f} \u03bcs\n")
 
 if __name__ == '__main__':
     get_time_metrics(parsed1, NODE1)
+    get_time_metrics(parsed2, NODE2)
+    get_time_metrics(parsed3, NODE3)
+    get_time_metrics(parsed4, NODE4)
     #nod1_met= get_data_size_metrics(parsed1, NODE1)
     #print("Echo Requests Sent: "+ str(nod1_met[0]))
     #print("Echo Requests Received: "+str(nod1_met[1]))
