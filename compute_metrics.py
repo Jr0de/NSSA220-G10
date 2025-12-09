@@ -36,8 +36,8 @@ def get_data_size_metrics(data: list[list[str]], sourceIP: str) :
     #6. Total Echo Request bytes received: In bytes, based on the size of the “frame”
         elif packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) != sourceIP:
             num_echoreq_recieved += 1
-            echoreq_bytes_recieved += len(data[i])-1
-            
+            pack = packet_parser.get_metrics(data[i])
+            echoreq_bytes_recieved += pack['Frame Size']
     #3. Number of Echo Replies sent
         elif packet_parser.hex_to_ip(data[i][34:35]) == '0' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
             num_echoreply_sent += 1
