@@ -33,7 +33,7 @@ def parse(raw_text: str) -> list[list[str]]:
             parts = line[4:].strip().split()
             for p in parts:
                 #ignore the parts in the file that are ...C....2.U@..E. etc
-                if len(p) == 2 and p != 'jk':
+                if len(p) == 2 and all(c in "0123456789abcdefABCDEF" for c in p):
                     current.append(p.lower())
     
     # Ensures the last packet is captured (i think?)
