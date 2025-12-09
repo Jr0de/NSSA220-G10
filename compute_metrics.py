@@ -30,13 +30,14 @@ def get_data_size_metrics(data: list[list[str]], sourceIP: str) :
     #5. Total Echo Request bytes sent: In bytes, based on the size of the “frame”
         if packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
             num_echoreq_sent += 1
-            echoreq_bytes_sent += len(data[i])
+            echoreq_bytes_sent += len(data[i])-1
 
     #2. Number of Echo Requests received and
     #6. Total Echo Request bytes received: In bytes, based on the size of the “frame”
         elif packet_parser.hex_to_ip(data[i][34:35]) == '8' and packet_parser.hex_to_ip(data[i][26:30]) != sourceIP:
             num_echoreq_recieved += 1
-            echoreq_bytes_recieved += len(data[i])
+            echoreq_bytes_recieved += len(data[i])-1
+            
     #3. Number of Echo Replies sent
         elif packet_parser.hex_to_ip(data[i][34:35]) == '0' and packet_parser.hex_to_ip(data[i][26:30]) == sourceIP:
             num_echoreply_sent += 1
@@ -131,16 +132,16 @@ def get_time_metrics(data: list[list[str]], node_ip: str) :
             rpl_delay_sum / rpl_delay_count
 
 if __name__ == '__main__':
-    print(get_time_metrics(parsed1, NODE1))
+    #print(get_time_metrics(parsed1, NODE1))
     #get_time_metrics(parsed2, NODE2)
     #get_time_metrics(parsed3, NODE3)
     #get_time_metrics(parsed4, NODE4)
-    #nod1_met= get_data_size_metrics(parsed1, NODE1)
+    nod1_met= get_data_size_metrics(parsed1, NODE1)
     #print("Echo Requests Sent: "+ str(nod1_met[0]))
     #print("Echo Requests Received: "+str(nod1_met[1]))
     #print("Echo Replies Sent: "+str(nod1_met[2]))
     #print("Echo Replies Received: "+str(nod1_met[3]))
-    #print("Echo Request Bytes Sent: "+str(nod1_met[4]))
-    #print("Echo Request Bytes Received: "+str(nod1_met[5]))
+    print("Echo Request Bytes Sent: "+str(nod1_met[4]))
+    print("Echo Request Bytes Received: "+str(nod1_met[5]))
     #print("Echo Request Data Sent: "+str(nod1_met[6]))
     #print("Echo Request Data Received: "+str(nod1_met[7]))
